@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #qrcode {
+            margin-top: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 2vw;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 5px;
+        }
+        button {
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Code Generator</h1>
+
+    <!-- QR Code Generator Form -->
+    <form id="itemForm">
+        <div>
+            <label>Item Name:</label>
+            <input type="text" id="itemName" placeholder="Enter item name">
+        </div>
+
+        <div>
+            <label>Owner Name:</label>
+            <input type="text" id="ownerName" placeholder="Enter owner name">
+        </div>
+        
+        <div>
+            <label>Phone Num:</label>
+            <input type="text" id="phoneNum" placeholder="Enter phone number">
+        </div>
+        
+        <div>
+            <label>Emergency Num:</label>
+            <input type="text" id="emergencyNum" placeholder="Enter emergency number">
+        </div>
+
+        <button type="button" onclick="generateQRCode()">Generate QR Code</button>
+    </form>
+
+    <div id="qrcode"></div>
+    
+    <!-- Download Button -->
+    <button id="downloadBtn" style="display:none;" onclick="downloadQRCode()">Download QR Code</button>
+
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script>
+        let qrCode;
+
+        // QR Code Generator Function
+        function generateQRCode() {
+            // Get values from input fields
+            let itemName = document.getElementById('itemName').value;
+            let ownerName = document.getElementById('ownerName').value;
+            let phoneNum = document.getElementById('phoneNum').value;
+            let emergencyNum = document.getElementById('emergencyNum').value;
+
+            // Combine values into a string for QR Code
+            let itemInfo = `Item: ${itemName}\nOwner: ${ownerName}\nPhone: ${phoneNum}\nEmergency: ${emergencyNum}`;
+
+            // Validate all fields are filled
+            if (itemName && ownerName && phoneNum && emergencyNum) {
+                document.getElementById('qrcode').innerHTML = ""; // Clear previous QR code
+                qrCode = new QRCode(document.getElementById("qrcode"), itemInfo); // Generate new QR code
+                document.getElementById('downloadBtn').style.display = 'inline-block'; // Show download button
+            } else {
+                alert("Please fill in all the fields.");
+            }
+        }
+
+        // Download the QR Code as an image
+        function downloadQRCode() {
+            const canvas = document.querySelector("#qrcode canvas");
+            const imgURL = canvas.toDataURL("image/png");
+
+            const link = document.createElement('a');
+            link.href = imgURL;
+            link.download = 'qrcode.png';
+            link.click();
+        }
+    </script>
+</body>
+</html>
